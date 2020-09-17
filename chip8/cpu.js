@@ -4,19 +4,26 @@ export class CPU {
     this.keyboard = keyboard;
     this.speaker = speaker;
 
+    this.reset();
+  }
+
+  reset() {
     // RAM
     this.memory = new Uint8Array(4096);
 
-    // registor
+    // registor, 8bit * 16
     this.v = new Uint8Array(16);
 
-    // memory address register
+    // memory address register, 16bit
     this.i = 0;
 
+    // special purpose 8-bit register
     this.delayTimer = 0;
+
+    // special purpose 8-bit register
     this.soundTimer = 0;
 
-    // program container
+    // program counter, 16bit
     this.pc = 0x200;
 
     this.stack = new Array();
@@ -121,7 +128,7 @@ export class CPU {
   }
 
   loadRom(romName) {
-    fetch('roms/' + romName)
+    return fetch('roms/' + romName)
       .then((res) => res.arrayBuffer())
       .then((blob) => {
         this.loadProgramIntoMemory(new Uint8Array(blob));
@@ -318,7 +325,7 @@ export class CPU {
             this.paused = true;
 
             this.keyboard.onNextKeyPress = (key) => {
-              this.v[x] - key;
+              this.v[x] = key;
               this.paused = false;
             };
 

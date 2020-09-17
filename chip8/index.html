@@ -3,21 +3,153 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Chip 8</title>
 
     <style>
       canvas {
         border: 2px solid black;
       }
+      .cpu-internal .name {
+        display: inline-block;
+        width: 200px;
+        vertical-align: top;
+      }
+
+      .cpu-internal .value {
+        display: inline-block;
+        padding: 0px 2px;
+        font-size: 12px;
+        font-family: monospace;
+        text-align: center;
+      }
+
+      .opcode-explained {
+        background: yellow;
+      }
+
+      .memory-value {
+        background: yellowgreen;
+      }
+
+      .register-v .col,
+      .memory .col {
+        display: inline-block;
+        width: 12px;
+        padding: 0px 2px;
+        margin-right: 2px;
+        font-size: 12px;
+        font-family: monospace;
+        text-align: center;
+      }
+
+      .register-v .col::before {
+        content: attr(data-index);
+        display: block;
+        color: #999;
+      }
+
+      .col.zero {
+        color: #aaa;
+      }
+
+      .memory .col.focused {
+        background: yellow;
+      }
+      .memory .col.focused-2 {
+        background: yellowgreen;
+      }
+
+      .canvas-container {
+        position: relative;
+        margin-bottom: 5px;
+      }
+
+      .log {
+        position: absolute;
+        left: 650px;
+        top: 0;
+        width: 500px;
+        height: 100%;
+        overflow-y: scroll;
+        font-family: monospace;
+      }
+      .log div {
+        line-height: 1;
+        margin-bottom: 3px;
+      }
+
+      .to-flash {
+        color: white;
+        background-color: rgb(184, 44, 184);
+      }
+
+      .flashing {
+        color: black;
+        background-color: transparent;
+        transition: background-color 1s;
+      }
+
+      .nonwrap {
+        white-space: nowrap;
+      }
     </style>
   </head>
   <body>
     <div>
-      <button id="pause">pause</button>
+      <button id="pause">play</button>
       <button id="fast">fast</button>
+      <button id="reset">reset</button>
+      <button id="step">execute and next</button>
+      <select id="rom-select">
+        <option selected value="HELLO">HELLO</option>
+        <option value="BLINKY">BLINKY</option>
+        <option value="BLITZ">BLITZ</option>
+      </select>
     </div>
     <hr />
-    <canvas />
+
+    <div class="canvas-container">
+      <canvas></canvas>
+      <div class="log"></div>
+    </div>
+
+    <div class="cpu-internal">
+      <div>
+        <span class="name">v (general purpose register):</span>
+        <span class="value register-v"></span>
+      </div>
+      <div>
+        <span class="name">i (memory address register):</span>
+        <span class="value memory-address-register-i"></span>
+        →
+        <span class="value memory-value"></span>
+      </div>
+      <div class="nonwrap">
+        <span class="name">pc (program counter):</span>
+        <span class="value program-counter-pc"></span>
+        →
+        <span class="value opcode-explained"></span>
+      </div>
+      <div>
+        <span class="name">stack:</span>
+        <span class="value stack"></span>
+      </div>
+
+      <div>
+        <span class="name">paused:</span>
+        <span class="value paused"></span>
+      </div>
+
+      <div>
+        <span class="name">speed:</span>
+        <span class="value speed"></span>
+      </div>
+
+      <div>
+        <span class="name">memory:</span>
+        <div class="value memory"></div>
+      </div>
+    </div>
 
     <script type="module" src="./chip8.js"></script>
   </body>
