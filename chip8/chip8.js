@@ -32,7 +32,7 @@ class Chip8 {
     this.cpu = new CPU(this.renderer, this.keyboard, this.speaker);
 
     this.displayEl = {
-      v: this.registersDisplay(), //document.querySelector('.cpu-internal .register-v'),
+      v: this.registersDisplay(),
       i: document.querySelector('.cpu-internal .memory-address-register-i'),
       memoryValue: document.querySelector('.cpu-internal .memory-value'),
       pc: document.querySelector('.cpu-internal .program-counter-pc'),
@@ -42,6 +42,10 @@ class Chip8 {
       speed: document.querySelector('.cpu-internal .speed'),
       log: document.querySelector('.log'),
       memory: this.memoryDisplay(),
+      lines: {
+        i: document.querySelector('.line-i'),
+        pc: document.querySelector('.line-pc'),
+      },
     };
   }
 
@@ -184,6 +188,29 @@ class Chip8 {
 
     this.displayEl.memory[lastI].classList.remove('focused-2');
     this.displayEl.memory[this.cpu.i].classList.add('focused-2');
+
+    this.drawLines(
+      this.displayEl.i,
+      this.displayEl.memory[this.cpu.i],
+      this.displayEl.lines.i
+    );
+
+    this.drawLines(
+      this.displayEl.pc,
+      this.displayEl.memory[this.cpu.pc],
+      this.displayEl.lines.pc
+    );
+  }
+
+  drawLines(fromEl, toEl, lineEl) {
+    let x1 = fromEl.offsetLeft + fromEl.clientWidth + 4;
+    let y1 = fromEl.offsetTop + fromEl.clientHeight + 2;
+    let x2 = toEl.offsetLeft;
+    let y2 = toEl.offsetTop;
+    lineEl.setAttribute('x1', x1);
+    lineEl.setAttribute('y1', y1);
+    lineEl.setAttribute('x2', x2);
+    lineEl.setAttribute('y2', y2);
   }
 
   loop() {
